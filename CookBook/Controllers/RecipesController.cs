@@ -19,10 +19,17 @@ namespace CookBook.Controllers
             _context = context;
         }
 
+        
         // GET: Recipes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-              return View(await _context.Recipe.ToListAsync());
+            var recipies = from r in _context.Recipe
+                           select r;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recipies = recipies.Where(s => s.Name!.Contains(searchString));
+            }
+              return View(await recipies.ToListAsync());
         }
 
         // GET: Recipes/Details/5
